@@ -1,6 +1,6 @@
 from dash import html
 import dash_bootstrap_components as dbc
-import app
+from app import app
 
 
 def render_textbox(text: str, box: str = "AI"):
@@ -31,6 +31,7 @@ def render_textbox(text: str, box: str = "AI"):
         textbox_human = dbc.Card(
             text, style=style, body=True, color="primary", inverse=True
         )
+
         return html.Div([thumbnail_human, textbox_human])
     elif box == "AI":
         style["margin-left"] = 0

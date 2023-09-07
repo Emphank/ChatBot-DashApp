@@ -2,6 +2,9 @@ import dash_bootstrap_components as dbc
 from dash import Dash
 import openai
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 APP_TITLE = "Chatbot App"
 
@@ -14,5 +17,3 @@ app = Dash(
 )
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-print(openai.api_key)
