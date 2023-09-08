@@ -34,6 +34,7 @@ def clear_input(n_clicks, n_submit):
     State(component_id="store-conversation", component_property="data"),
 )
 def run_chatbot(n_clicks, n_submit, user_input, chat_history):
+    print(user_input)
     if n_clicks == 0 and n_submit is None:
         return "", None
 
@@ -44,4 +45,5 @@ def run_chatbot(n_clicks, n_submit, user_input, chat_history):
     result_ai = converstaion.predict(input=user_input)
     model_output = result_ai.strip()
     chat_history += f"{model_output}<split>"
+    user_input = ""
     return chat_history, None

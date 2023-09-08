@@ -5,38 +5,21 @@ from app import app
 
 def render_textbox(text: str, box: str = "AI"):
     text = text.replace(f"ChatBot:", "").replace("Human:", "")
-    style = {
-        "max-width": "60%",
-        "width": "max-content",
-        "padding": "5px 10px",
-        "border-radius": 25,
-        "margin-bottom": 20,
-        "border": "0px solid",
-    }
 
     if box == "human":
-        style["margin-bottom"] = "auto"
-        style["margin-right"] = 0
+        textbox_human = dbc.Card(
+            text, body=True, style={"color": "gray"}, color="#ffffff", inverse=False
+        )
 
-        thumbnail_human = html.Img(
-            src=app.get_asset_url("human.png"),
+        return html.Div(
+            [textbox_human],
             style={
-                "border-radius": 50,
-                "height": 36,
-                "margin-left": 5,
-                "float": "right",
+                "display": "flex",
+                "margin-bottom": "0.3rem",
+                "flex-direction": "row-reverse",
             },
         )
-
-        textbox_human = dbc.Card(
-            text, style=style, body=True, color="primary", inverse=True
-        )
-
-        return html.Div([thumbnail_human, textbox_human])
     elif box == "AI":
-        style["margin-left"] = 0
-        style["margin-right"] = "auto"
-
         thumbnail = html.Img(
             src=app.get_asset_url("chatbot.png"),
             style={
@@ -47,9 +30,18 @@ def render_textbox(text: str, box: str = "AI"):
             },
         )
 
-        textbox = dbc.Card(text, style=style, body=True, color="light", inverse=False)
+        textbox = dbc.Card(
+            text, style={"color": "#99b0d9"}, body=True, color="#345ba0", inverse=False
+        )
 
-        return html.Div([thumbnail, textbox])
+        return html.Div(
+            [thumbnail, textbox],
+            style={
+                "display": "flex",
+                "margin-bottom": "0.3rem",
+                "flex-direction": "row",
+            },
+        )
 
     else:
         raise ValueError("Incorrect option for `box`.")

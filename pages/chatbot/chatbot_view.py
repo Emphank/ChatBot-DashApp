@@ -8,12 +8,13 @@ from components.input import render_chat_input
 
 # define layout
 chatbot_layout = html.Div(
-    html.Div(id="display-conversation"),
+    id="display-conversation",
     style={
-        "overflow-y": "auto",
+        "height": "100%",
         "display": "flex",
-        "height": "calc(90vh-132px)",
-        "flex-direction": "column-reverse",
+        "flex-direction": "column",
+        "overflow-y": "auto",
+        "color": "#f1f1f1",
     },
 )
 
@@ -29,7 +30,6 @@ def render_chatbot():
                 children=[
                     dbc.Row(
                         [
-                            dbc.Col(width=1),
                             dbc.Col(
                                 width=10,
                                 children=dbc.Card(
@@ -40,9 +40,11 @@ def render_chatbot():
                                                 html.Div(
                                                     render_chat_input(),
                                                     style={
-                                                        "margin-left": "70px",
-                                                        "margin-right": "70px",
-                                                        "margin-bottom": "20px",
+                                                        "width": "100%",
+                                                        "height": "3rem",
+                                                        "display": "flex",
+                                                        "justify-content": "center",
+                                                        "gap": "1rem",
                                                     },
                                                 ),
                                                 dbc.Spinner(
@@ -53,13 +55,20 @@ def render_chatbot():
                                                 "border-radius": 25,
                                                 "background": "#FFFFFF",
                                                 "border": "0px solid",
+                                                "display": "flex",
+                                                "flex-direction": "column",
+                                                "justify-content": "space-between",
+                                                "height": "85vh",
                                             },
                                         )
                                     ]
                                 ),
                             ),
-                            dbc.Col(width=1),
-                        ]
+                        ],
+                        style={
+                            "display": "flex",
+                            "justify-content": "center",
+                        },
                     )
                 ],
             ),
