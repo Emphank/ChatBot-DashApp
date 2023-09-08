@@ -1,3 +1,5 @@
+import openai
+
 from dash.dependencies import Input, Output, State
 from app import app
 
@@ -5,14 +7,21 @@ from components.textbox import render_textbox
 from pages.chatbot.chatbot_model import converstaion
 
 
+message_history = []
+
+
 @app.callback(
     Output(component_id="display-conversation", component_property="children"),
     Input(component_id="store-conversation", component_property="data"),
 )
-def update_display(chat_history):
+def update_display(data):
+    if not data:
+        return []
     return [
-        render_textbox(x, box="human") if i % 2 == 0 else render_textbox(x, box="AI")
-        for i, x in enumerate(chat_history.split("<split>")[:-1])
+        render_textbox(
+            message_history[i]["content"], box="human" if i % 2 == 0 else "AI"
+        )
+        for i in range(len(message_history))
     ]
 
 
@@ -41,9 +50,18 @@ def run_chatbot(n_clicks, n_submit, user_input, chat_history):
     if user_input is None or user_input == "":
         return chat_history, None
 
-    chat_history += f"Human: {user_input}<split>ChatBot: "
-    result_ai = converstaion.predict(input=user_input)
-    model_output = result_ai.strip()
-    chat_history += f"{model_output}<split>"
-    user_input = ""
-    return chat_history, None
+    message_history.append({"role": "user", "content": user_input})
+
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo", messages=message_history
+    )
+
+    reply_content = completion.choices[0]["message"].content
+    message_history.append({"role": "assistant", "content": reply_content})
+
+    # chat_history += f"Human: {user_input}<split>ChatBot: "
+    # result_ai = converstaion.predict(input=user_input)
+    # model_output = result_ai.strip()
+    # chat_history += f"{model_output}<split>"
+    # user_input = ""
+    return message_history, None

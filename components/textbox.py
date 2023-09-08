@@ -15,7 +15,7 @@ def render_textbox(text: str, box: str = "AI"):
             [textbox_human],
             style={
                 "display": "flex",
-                "margin-bottom": "0.3rem",
+                "margin-bottom": "0.5rem",
                 "flex-direction": "row-reverse",
             },
         )
@@ -38,7 +38,7 @@ def render_textbox(text: str, box: str = "AI"):
             [thumbnail, textbox],
             style={
                 "display": "flex",
-                "margin-bottom": "0.3rem",
+                "margin-bottom": "0.5rem",
                 "flex-direction": "row",
             },
         )
