@@ -18,12 +18,15 @@ message_history = []
 def update_display(data):
     if not data:
         return []
-    return [
-        render_textbox(
-            message_history[i + 1]["content"], box="human" if i % 2 == 0 else "AI"
-        )
-        for i in range(len(message_history) - 1)
-    ]
+
+    message_boxes = []
+    for i in range(1, len(message_history)):
+        if i % 2 == 0:
+            message_boxes.append(render_textbox(message_history[i]["content"], "AI"))
+        else:
+            message_boxes.append(render_textbox(message_history[i]["content"], "human"))
+
+    return message_boxes
 
 
 @app.callback(
@@ -38,6 +41,7 @@ def clear_input(n_clicks, n_submit):
 @app.callback(
     Output(component_id="store-conversation", component_property="data"),
     Output(component_id="loading-component", component_property="children"),
+    Output(component_id="user-input", component_property="value"),
     Input(component_id="submit", component_property="n_clicks"),
     Input(component_id="user-input", component_property="n_submit"),
     State(component_id="user-input", component_property="value"),
@@ -45,10 +49,10 @@ def clear_input(n_clicks, n_submit):
 )
 def run_chatbot(n_clicks, n_submit, user_input, chat_history):
     if n_clicks == 0 and n_submit is None:
-        return "", None
+        return "", None, user_input
 
     if user_input is None or user_input == "":
-        return chat_history, None
+        return chat_history, None, user_input
 
     message_history.append({"role": "user", "content": user_input})
 
@@ -59,4 +63,4 @@ def run_chatbot(n_clicks, n_submit, user_input, chat_history):
     reply_content = completion.choices[0]["message"].content
     message_history.append({"role": "assistant", "content": reply_content})
 
-    return message_history, None
+    return message_history, None, ""
