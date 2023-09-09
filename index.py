@@ -5,6 +5,7 @@ from dash import dcc, html
 from pages.chatbot.chatbot_view import render_chatbot
 from pages.chatbot.chatbot_controller import *
 from pages.page_not_found import page_not_found
+from pages.admin import admin
 
 from app import app
 
@@ -14,7 +15,10 @@ def serve_content():
     :return: html div component
     """
     return html.Div(
-        [dcc.Location(id="url", refresh=False), html.Div(id="page-content")]
+        [
+            dcc.Location(id="url", refresh=False),
+            html.Div(id="page-content"),
+        ]
     )
 
 
@@ -29,6 +33,8 @@ def display_page(pathname):
     """
     if pathname in "/" or pathname in "/chatbot":
         return render_chatbot()
+    elif pathname in "/admin":
+        return admin()
     return page_not_found()
 
 

@@ -1,10 +1,11 @@
 import openai
 
 from dash.dependencies import Input, Output, State
-from app import app
+from dash.exceptions import PreventUpdate
 
 from components.textbox import render_textbox
-from pages.chatbot.chatbot_model import converstaion
+
+from app import app
 
 
 message_history = []
@@ -19,9 +20,9 @@ def update_display(data):
         return []
     return [
         render_textbox(
-            message_history[i]["content"], box="human" if i % 2 == 0 else "AI"
+            message_history[i + 1]["content"], box="human" if i % 2 == 0 else "AI"
         )
-        for i in range(len(message_history))
+        for i in range(len(message_history) - 1)
     ]
 
 
@@ -43,7 +44,6 @@ def clear_input(n_clicks, n_submit):
     State(component_id="store-conversation", component_property="data"),
 )
 def run_chatbot(n_clicks, n_submit, user_input, chat_history):
-    print(user_input)
     if n_clicks == 0 and n_submit is None:
         return "", None
 
@@ -59,9 +59,4 @@ def run_chatbot(n_clicks, n_submit, user_input, chat_history):
     reply_content = completion.choices[0]["message"].content
     message_history.append({"role": "assistant", "content": reply_content})
 
-    # chat_history += f"Human: {user_input}<split>ChatBot: "
-    # result_ai = converstaion.predict(input=user_input)
-    # model_output = result_ai.strip()
-    # chat_history += f"{model_output}<split>"
-    # user_input = ""
     return message_history, None

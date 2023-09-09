@@ -1,3 +1,5 @@
+import json
+
 import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
@@ -5,6 +7,8 @@ from dash import html
 # import components
 from components.navbar import render_navbar
 from components.input import render_chat_input
+
+import pages.chatbot.chatbot_controller as chatbot_controller
 
 # define layout
 chatbot_layout = html.Div(
@@ -20,11 +24,19 @@ chatbot_layout = html.Div(
 
 
 def render_chatbot():
+    with open("././context.json", "r") as file:
+        context_data = json.load(file)
+        context = context_data["context"]
+
+        chatbot_controller.message_history.append(
+            {"role": "system", "content": context}
+        )
     return html.Div(
         [
             render_navbar(brand_name="AI Chatbot"),
             html.Br(),
             dcc.Store(id="store-conversation", data=""),
+            html.Div(id="dummy-output", style={"display": "none"}),
             dbc.Container(
                 fluid=True,
                 children=[
