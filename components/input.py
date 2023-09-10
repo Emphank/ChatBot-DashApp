@@ -14,7 +14,7 @@ def render_chat_input():
                 ),
                 className="input-wrapper",
             ),
-            html.Button(id="submit", value="Send", className="chat-send-btn"),
+            html.Button("Send", id="submit", className="chat-send-btn"),
         ],
         className="chat-input-wrapper",
     )
