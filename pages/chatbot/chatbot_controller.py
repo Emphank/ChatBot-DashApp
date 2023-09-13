@@ -1,4 +1,5 @@
 import openai
+import os
 
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
@@ -6,7 +7,11 @@ from dash.exceptions import PreventUpdate
 from components.textbox import render_textbox
 
 from app import app
+from dotenv import load_dotenv
 
+load_dotenv()
+
+TOKEN_LIMIT = int(os.getenv("TOKEN_LIMIT"))
 
 message_history = []
 
@@ -17,16 +22,21 @@ message_history = []
 )
 def update_display(data):
     if not data:
-        return []
+        # Initial bot's reply to "hello" when the page loads
+        message_history.append({"role": "user", "content": "hello"})
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-16k", messages=message_history, max_tokens=TOKEN_LIMIT
+        )
+        reply_content = completion.choices[0]["message"].content
+        message_history.append({"role": "assistant", "content": reply_content})
+        return [render_textbox(reply_content, "AI")]
 
-    message_boxes = []
-    for i in range(1, len(message_history)):
-        if i % 2 == 0:
-            message_boxes.append(render_textbox(message_history[i]["content"], "AI"))
-        else:
-            message_boxes.append(render_textbox(message_history[i]["content"], "human"))
+    display_messages = []
+    for msg in message_history[2:]:
+        role = "AI" if msg["role"] == "assistant" else "human"
+        display_messages.append(render_textbox(msg["content"], role))
 
-    return message_boxes
+    return display_messages
 
 
 @app.callback(
@@ -57,7 +67,7 @@ def run_chatbot(n_clicks, n_submit, user_input, chat_history):
     message_history.append({"role": "user", "content": user_input})
 
     completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo", messages=message_history
+        model="gpt-3.5-turbo-16k", messages=message_history, max_tokens=TOKEN_LIMIT
     )
 
     reply_content = completion.choices[0]["message"].content
