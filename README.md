@@ -8,8 +8,8 @@ Python = 3.11.2
 
 1. Clone and navigate to the project directory
    ```bash
-   git clone https://github.com/chrisshaheen1/CAI.git
-   cd CAI
+   git clone https://github.com/ericcroxen/ChatBot-DashApp.git
+   cd ChatBot-DashApp
    ```
 2. Create and activate the virtual environment
    ```bash
